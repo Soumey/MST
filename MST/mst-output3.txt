@@ -1,0 +1,16 @@
+S K 60
+D O 82
+O S 96
+F P 108
+T K 109
+P C 110
+W E 115
+E T 130
+G N 135
+T R 136
+L R 138
+F D 139
+G C 145
+Z F 175
+B W 179
+Minimum Cost Spanning Tree: 1857

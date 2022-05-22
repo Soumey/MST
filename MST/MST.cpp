@@ -53,6 +53,7 @@ public:
 class Graph {
     vector<vector<int> > edgelist;
     int V;
+    fstream fileOUT;
 
 public:
     Graph(int V) { this->V = V; }
@@ -62,8 +63,9 @@ public:
         edgelist.push_back({ w, x, y });
     }
 
-    void kruskals_mst()
+    void kruskals_mst(vector<pair<int, string>> vect)
     {
+        fileOUT.open("mst-output3.txt", ios::out);
         // 1. Sort all edges
         sort(edgelist.begin(), edgelist.end());
 
@@ -82,42 +84,77 @@ public:
             if (s.find(x) != s.find(y)) {
                 s.unite(x, y);
                 ans += w;
-                cout << x << " -- " << y << " == " << w
-                    << endl;
+                
+                cout << vect[x].second << " " << vect[y].second << " " <<w<< endl;
+                fileOUT << vect[x].second << " " << vect[y].second << " " << w << endl;
+                
             }
         }
         cout << "Minimum Cost Spanning Tree: " << ans;
+        fileOUT<< "Minimum Cost Spanning Tree: " << ans;
+        fileOUT.close();
     }
+    
 };
 int main()
 {
-    /* Let us create following weighted graph
-                   3
-           AA=1--------2=BB
-              |      / |
-             6|   3/   |5
-              |  /     |
-           DD=2--------3=CC
-                  2       */
-    Graph g(4);
-    g.addEdge(0, 1, 3);
-    g.addEdge(1, 2, 5);
-    g.addEdge(3, 0, 6);
-    g.addEdge(2, 3, 2);
-    g.addEdge(1, 3, 3);
+   
+    vector<pair<int, string>> vect;
+    fstream fileIN;
+    int k;
+    int n;
+    string w;
+    int edges;
+    int e1;
+    int e2;
+    int e_v;
+    
+    fileIN.open("mst-input3.txt",ios::in);
+    if (!fileIN.is_open())
+    {
+        cout << "Open error\n Proceed with keyboard\n";
+        cin >> k;
+        Graph grap(k);
+        for (int i{}; i < k; i++)
+        {
+            cin >> n;
+            cin >> w;
+            vect.emplace_back(n,w);
+            
 
-    // int n, m;
-    // cin >> n >> m;
+        }
+        cin >> edges;
+        for (int i{}; i < edges; i++)
+        {
+            cin >> e1;
+            cin >> e2;
+            cin >> e_v;
+            grap.addEdge(e1, e2, e_v);
+        }
+        grap.kruskals_mst(vect);
+    }
+    else
+    {
+        fileIN >> k;
+        Graph grap(k);
+        for (int i{}; i < k; i++)
+        {
+            fileIN >> n;
+            fileIN >> w;
+            vect.emplace_back(n - 1, w);
+            
+        }
+        fileIN >> edges;
+        for (int i{}; i < edges; i++) {
+            fileIN >> e1;
+            fileIN >> e2;
+            fileIN >> e_v;
+            grap.addEdge(e1 - 1, e2 - 1, e_v);
+        }
+        grap.kruskals_mst(vect);
+    }
 
-    // Graph g(n);
-    // for (int i = 0; i < m; i++)
-    // {
-    //     int x, y, w;
-    //     cin >> x >> y >> w;
-    //     g.addEdge(x, y, w);
-    // }
-
-    g.kruskals_mst();
+    fileIN.close();
     return 0;
 }
 
